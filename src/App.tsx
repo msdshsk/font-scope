@@ -21,19 +21,28 @@ function App() {
     { enabled: false, width: 4, color: "#FFFFFF" },
     { enabled: false, width: 6, color: "#000000" },
   ]);
-  const [favorites, setFavorites] = useState<FavoritesData>(loadFavorites());
+  const [favorites, setFavorites] = useState<FavoritesData>({
+    categories: { 'デフォルト': [] },
+    categoryColors: { 'デフォルト': '#FFFF00' },
+    enabledCategories: { 'デフォルト': true },
+  });
   const [filterText, setFilterText] = useState("");
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
 
-  // フォントリストを読み込み
+  // 初期化：フォントリストと保存された設定を読み込み
   useEffect(() => {
-    async function fetchFonts() {
+    async function initialize() {
       try {
+        // フォントリストを取得
         const systemFonts = await invoke<string[]>("get_system_fonts");
         setFonts(systemFonts);
 
+        // お気に入りを読み込み
+        const savedFavorites = await loadFavorites();
+        setFavorites(savedFavorites);
+
         // 保存された状態を読み込み
-        const savedState = loadAppState();
+        const savedState = await loadAppState();
         if (savedState.selectedFontName && systemFonts.includes(savedState.selectedFontName)) {
           setSelectedFont(savedState.selectedFontName);
         }
@@ -45,10 +54,10 @@ function App() {
         if (savedState.bgImagePath) setBgImagePath(savedState.bgImagePath);
         if (savedState.strokeLayers) setStrokeLayers(savedState.strokeLayers);
       } catch (error) {
-        console.error("Failed to fetch fonts:", error);
+        console.error("Failed to initialize:", error);
       }
     }
-    fetchFonts();
+    initialize();
   }, []);
 
   // 状態が変更されたら保存
@@ -63,12 +72,16 @@ function App() {
       bgImagePath,
       strokeLayers,
     };
-    saveAppState(state);
+    saveAppState(state).catch((error) => {
+      console.error("Failed to save app state:", error);
+    });
   }, [selectedFont, textInput, fontSize, textColor, bgColor, useBgImage, bgImagePath, strokeLayers]);
 
   // お気に入りが変更されたら保存
   useEffect(() => {
-    saveFavorites(favorites);
+    saveFavorites(favorites).catch((error) => {
+      console.error("Failed to save favorites:", error);
+    });
   }, [favorites]);
 
   return (

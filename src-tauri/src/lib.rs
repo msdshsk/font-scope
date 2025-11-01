@@ -1,11 +1,26 @@
 use font_kit::family_name::FamilyName;
 use font_kit::properties::Properties;
 use font_kit::source::SystemSource;
+use std::env;
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
 fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
+}
+
+#[tauri::command]
+fn get_exe_dir() -> Result<String, String> {
+    match env::current_exe() {
+        Ok(exe_path) => {
+            if let Some(exe_dir) = exe_path.parent() {
+                Ok(exe_dir.to_string_lossy().to_string())
+            } else {
+                Err("Failed to get parent directory".to_string())
+            }
+        }
+        Err(e) => Err(format!("Failed to get exe path: {}", e)),
+    }
 }
 
 #[tauri::command]
@@ -41,7 +56,8 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_dialog::init())
-        .invoke_handler(tauri::generate_handler![greet, get_system_fonts, get_font_family_name])
+        .plugin(tauri_plugin_fs::init())
+        .invoke_handler(tauri::generate_handler![greet, get_system_fonts, get_font_family_name, get_exe_dir])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
