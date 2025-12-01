@@ -19,4 +19,5 @@ export interface AppState {
   useBgImage: boolean;
   bgImagePath: string | null;
   strokeLayers: StrokeLayer[];
+  isVertical: boolean;
 }

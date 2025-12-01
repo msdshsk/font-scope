@@ -21,6 +21,7 @@ function App() {
     { enabled: false, width: 4, color: "#FFFFFF" },
     { enabled: false, width: 6, color: "#000000" },
   ]);
+  const [isVertical, setIsVertical] = useState(false);
   const [favorites, setFavorites] = useState<FavoritesData>({
     categories: { 'デフォルト': [] },
     categoryColors: { 'デフォルト': '#FFFF00' },
@@ -53,6 +54,7 @@ function App() {
         if (savedState.useBgImage !== undefined) setUseBgImage(savedState.useBgImage);
         if (savedState.bgImagePath) setBgImagePath(savedState.bgImagePath);
         if (savedState.strokeLayers) setStrokeLayers(savedState.strokeLayers);
+        if (savedState.isVertical !== undefined) setIsVertical(savedState.isVertical);
       } catch (error) {
         console.error("Failed to initialize:", error);
       }
@@ -71,11 +73,12 @@ function App() {
       useBgImage,
       bgImagePath,
       strokeLayers,
+      isVertical,
     };
     saveAppState(state).catch((error) => {
       console.error("Failed to save app state:", error);
     });
-  }, [selectedFont, textInput, fontSize, textColor, bgColor, useBgImage, bgImagePath, strokeLayers]);
+  }, [selectedFont, textInput, fontSize, textColor, bgColor, useBgImage, bgImagePath, strokeLayers, isVertical]);
 
   // お気に入りが変更されたら保存
   useEffect(() => {
@@ -109,6 +112,7 @@ function App() {
         useBgImage={useBgImage}
         bgImagePath={bgImagePath}
         strokeLayers={strokeLayers}
+        isVertical={isVertical}
       />
 
       {/* 右サイドパネル - コントロールパネル */}
@@ -127,6 +131,8 @@ function App() {
         onBgImagePathChange={setBgImagePath}
         strokeLayers={strokeLayers}
         onStrokeLayersChange={setStrokeLayers}
+        isVertical={isVertical}
+        onIsVerticalChange={setIsVertical}
       />
     </div>
   );

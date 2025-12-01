@@ -18,6 +18,8 @@ interface ControlPanelProps {
   onBgImagePathChange: (path: string | null) => void;
   strokeLayers: StrokeLayer[];
   onStrokeLayersChange: (layers: StrokeLayer[]) => void;
+  isVertical: boolean;
+  onIsVerticalChange: (vertical: boolean) => void;
 }
 
 export default function ControlPanel({
@@ -35,6 +37,8 @@ export default function ControlPanel({
   onBgImagePathChange,
   strokeLayers,
   onStrokeLayersChange,
+  isVertical,
+  onIsVerticalChange,
 }: ControlPanelProps) {
   const updateStrokeLayer = (index: number, updates: Partial<StrokeLayer>) => {
     const newLayers = [...strokeLayers];
@@ -78,13 +82,40 @@ export default function ControlPanel({
         {/* テキスト入力 */}
         <div className="mb-4">
           <label className="block text-sm font-medium mb-2">表示テキスト</label>
-          <input
-            type="text"
+          <textarea
             value={textInput}
             onChange={(e) => onTextInputChange(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="テキストを入力"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+            placeholder="テキストを入力（複数行可）"
+            rows={3}
           />
+        </div>
+
+        {/* 書字方向 */}
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2">書字方向</label>
+          <div className="flex gap-2">
+            <button
+              onClick={() => onIsVerticalChange(false)}
+              className={`flex-1 px-3 py-2 text-sm rounded border ${
+                !isVertical
+                  ? "bg-blue-500 text-white border-blue-500"
+                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+              }`}
+            >
+              横書き
+            </button>
+            <button
+              onClick={() => onIsVerticalChange(true)}
+              className={`flex-1 px-3 py-2 text-sm rounded border ${
+                isVertical
+                  ? "bg-blue-500 text-white border-blue-500"
+                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+              }`}
+            >
+              縦書き
+            </button>
+          </div>
         </div>
 
         {/* フォントサイズ */}

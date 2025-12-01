@@ -22,29 +22,7 @@
       "assetProtocol": {
         "enable": true,
         "scope": ["**/*"]
-      },
-      "capabilities": [
-        {
-          "identifier": "main-capability",
-          "description": "Main application capabilities",
-          "windows": ["main"],
-          "permissions": [
-            "fs:default",
-            {
-              "identifier": "fs:allow-exists",
-              "allow": [{"path": "**"}]
-            },
-            {
-              "identifier": "fs:allow-read-text-file",
-              "allow": [{"path": "**"}]
-            },
-            {
-              "identifier": "fs:allow-write-text-file",
-              "allow": [{"path": "**"}]
-            }
-          ]
-        }
-      ]
+      }
     }
   },
   "bundle": {

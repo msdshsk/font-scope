@@ -8,7 +8,21 @@
     "opener:default",
     "dialog:default",
     "dialog:allow-open",
+    "dialog:allow-save",
     "core:path:default",
-    "core:image:default"
+    "core:image:default",
+    "fs:default",
+    {
+      "identifier": "fs:allow-exists",
+      "allow": [{"path": "**"}]
+    },
+    {
+      "identifier": "fs:allow-read-text-file",
+      "allow": [{"path": "**"}]
+    },
+    {
+      "identifier": "fs:allow-write-text-file",
+      "allow": [{"path": "**"}]
+    }
   ]
 }
